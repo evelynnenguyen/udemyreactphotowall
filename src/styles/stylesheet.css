@@ -83,12 +83,15 @@ html {
     width: 100%;
     margin: 0;
    }
+   
    .photo {
+/* 4 rem is the padding */
     width: calc(100% + 4rem);
     margin-left: -2rem;
     margin-top: -2rem;
     max-width: none;
    }
+   
    .comment{
     width: 100%
    }
