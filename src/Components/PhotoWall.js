@@ -6,6 +6,7 @@
 import React from 'react'
 import Photo from './Photo'
 import PropTypes from 'prop-types'
+import {Link} from 'react-router-dom'
 // anchor tag, href attribute => allow to create hyperlink between pages
 
 // The export value of this file is going to be a stateless
@@ -13,10 +14,14 @@ import PropTypes from 'prop-types'
 
 function PhotoWall(props) {
     return <div>
-        <a className = "addIcon" onClick = {props.onNavigate} href = "#AddPhoto"></a>
+        <Link className = "addIcon" to="AddPhoto"></Link>
         {/* <button onClick = {props.onNavigate} className = "addIcon"> </button> */}
         <div className = "photoGrid" >
-            {props.posts.map((post, index) => <Photo key = {index} post = {post} onRemovePhoto ={props.onRemovePhoto}/>)}
+            {props.posts
+                .sort(function(x,y) {
+                    return y.id - x.id
+                })
+                .map((post, index) => <Photo key = {index} post = {post} onRemovePhoto ={props.onRemovePhoto}/>)}
         </div>
     </div>
 }

@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Title from './Title'
 import PhotoWall from './PhotoWall'
 import AddPhoto from './AddPhoto'
+import {Route} from 'react-router-dom'
 
 class Main extends Component {
     // this is to update the state of UI
@@ -9,25 +10,25 @@ class Main extends Component {
         super()
         this.state = {
             posts: [{
-                id: "0",
+                id: 0,
                 description: "beautiful landscape",
                 imageLink: "https://image.jimcdn.com/app/cms/image/transf/none/path/sa6549607c78f5c11/image/i4eeacaa2dbf12d6d/version/1490299332/most-beautiful-landscapes-in-europe-lofoten-european-best-destinations-copyright-iakov-kalinin.jpg" +
                 "3919321_1443393332_n.jpg"
                 }, {
-                id: "1",
+                id: 1,
                 description: "Aliens???",
                 imageLink: "https://cdn.images.express.co.uk/img/dynamic/80/590x/Wilsthorp-UFO-854745.jpg"
                 }, {
-                id: "2",
+                id: 2,
                 description: "On a vacation!",
                 imageLink: "https://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2017/08/24/104670887-VacationExplainsTHUMBWEB.1910x1000.jpg"
                 }],
             //to switch between the page putting url and page displaying photos
-                screen: 'photos'
+                // screen: 'photos'
         }
         // clarifying "this" to use it in the removePhoto
         this.removePhoto = this.removePhoto.bind(this)
-        this.navigate = this.navigate.bind(this)
+        // this.navigate = this.navigate.bind(this)
     }
 
     // This function will pass the command remove to a specific photo after we click "Remove" button
@@ -39,17 +40,12 @@ class Main extends Component {
         }))
     }
 
-    navigate() {
-        this.setState({
-            screen: 'addPhoto'
-        })
+    addPhoto(postSubmitted) {
+        this.setState(state => ({
+            posts: state.posts.concat([postSubmitted])
+        }))
     }
 
-    // cannot define setState() inside render() function bc setState() changes the state of the app
-    // and that cause a change in the state called the render() function again => causing infinite loop and app crash
-    
-    // after all elements of the page is rendered correctly, componentDidMount method is called
-    // to fetching elements from a database, make sure it is inside the componentDidMount
     componentDidMount() {
     }
 
@@ -61,25 +57,25 @@ class Main extends Component {
     }
 
     render () {
-        return <div>
-        {
-            this.state.screen == 'photos' && (
-            <div>
-                <Title title = {'PhotoWall'}/>
-                {/* install prop-types */}
-                <PhotoWall posts = {this.state.posts} onRemovePhoto = {this.removePhoto} onNavigate = {this.navigate}/>
-            </div>
-            )
-        }
+        console.log(this.state.posts)
+        return (<div>
+            <Route exact path = "/" render={() => (
+                <div>
+                    <Title title = {'PhotoWall'}/>
+                    {/* install prop-types */}
+                    <PhotoWall posts = {this.state.posts} onRemovePhoto = {this.removePhoto} onNavigate = {this.navigate}/>
+                </div>
+            )}/>
 
-        {
-            this.state.screen == 'addPhoto' && (
-            <div>
-                <AddPhoto/>
-            </div>
-            )
-        }
+            <Route path= "/AddPhoto" render = {({history}) => (
+                <AddPhoto onAddPhoto={(addedPost) => {
+                    console.log(addedPost)
+                    this.addPhoto(addedPost)
+                    history.push('./')
+                }}/>
+            )}/>
         </div>
+        )
     }
 }
 
@@ -119,9 +115,20 @@ export default Main
 //         }]
 // }
 
+// cannot define setState() inside render() function bc setState() changes the state of the app
+// and that cause a change in the state called the render() function again => causing infinite loop and app crash
+    
+// after all elements of the page is rendered correctly, componentDidMount method is called
+// to fetching elements from a database, make sure it is inside the componentDidMount
 // componentDidMount() {
 //     // const posts = SimulateFetchFromDatabase()
 //     // this.setState({
 //     //     posts: posts
 //     // })
+// }
+
+// navigate() {
+//     this.setState({
+//         screen: 'addPhoto'
+//     })
 // }
